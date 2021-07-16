@@ -1,8 +1,6 @@
 # `@yarnpkg/plugin-postinstall`
 
-Yarn v2 only runs postinstall hooks if dependencies have changed. Under the zero install model, cloning a repo with cached dependencies for the first time and running `yarn` does not trigger the standard `postinstall` hook.
-
-This Yarn plugin adds support for defining a postinstall hook in the `.yarnrc.yml` file, which is *always* run after each `yarn install`.
+Yarn v2 only runs postinstall hooks if cached dependencies have changed. This Yarn plugin adds support for defining a postinstall hook in the `.yarnrc.yml` file, which is *always* run after each `yarn install`.
 
 ## Installation
 
