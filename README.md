@@ -9,7 +9,7 @@ This Yarn plugin adds support for defining a postinstall hook in the `.yarnrc.ym
 You can add this plugin to your Yarn 2 ("Yarn Berry") project running the following command:
 
 ```bash
-yarn plugin import https://raw.githubusercontent.com/gravitywelluk/yarn-plugin-postinstall/main/bundles/%40yarnpkg/plugin-postinstall.js
+yarn plugin import https://raw.githubusercontent.com/gravitywelluk/yarn-plugin-postinstall/master/bundles/%40yarnpkg/plugin-postinstall.js
 ```
 
 ## Configuration
