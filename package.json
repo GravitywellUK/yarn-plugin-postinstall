@@ -1,0 +1,22 @@
+{
+  "name": "@gravitywelluk/yarn-plugin-postinstall",
+  "main": "./sources/index.ts",
+  "dependencies": {
+    "@types/node": "^12.0.0",
+    "@yarnpkg/builder": "^2.1.3",
+    "@yarnpkg/core": "^2.4.0",
+    "@yarnpkg/shell": "^2.4.1",
+    "clipanion": "^2.6.2",
+    "husky": "^4.3.0",
+    "typescript": "4.1.0-beta"
+  },
+  "scripts": {
+    "build": "builder build plugin"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn build",
+      "post-merge": "yarn"
+    }
+  }
+}
