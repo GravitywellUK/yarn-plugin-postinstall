@@ -1,7 +1,9 @@
 import { CommandContext, Plugin, Configuration } from "@yarnpkg/core";
-import * as Shell from "@yarnpkg/shell";
 import { Command } from "clipanion";
 import { configuration } from "./config";
+import { executePostInstallCommand } from "./postinstall";
+
+
 
 class PostInstallCommand extends Command<CommandContext> {
   @Command.Path("postinstall")
@@ -11,24 +13,19 @@ class PostInstallCommand extends Command<CommandContext> {
       this.context.plugins
     );
     const postinstall = configuration.get("postinstall");
-    if (postinstall) {
-      Shell.execute(postinstall);
-    }
+    
+    await executePostInstallCommand(postinstall);
   }
 }
 
 const plugin: Plugin = {
   configuration,
-  commands: [
-    PostInstallCommand
-  ],
+  commands: [ PostInstallCommand ],
   hooks: {
-    afterAllInstalled: project => {
+    afterAllInstalled: async project => {
       const postinstall = project.configuration.get("postinstall");
-      if (postinstall) {
-        console.log("Running postinstall script...");
-        Shell.execute(postinstall);
-      }
+
+      await executePostInstallCommand(postinstall);
     }
   }
 };
