@@ -12,7 +12,7 @@ class PostInstallCommand extends Command<CommandContext> {
     );
     const postinstall = configuration.get("postinstall");
     if (postinstall) {
-      Shell.execute(postinstall);
+      return await Shell.execute(postinstall);
     }
   }
 }
@@ -23,11 +23,11 @@ const plugin: Plugin = {
     PostInstallCommand
   ],
   hooks: {
-    afterAllInstalled: project => {
+    afterAllInstalled: async project => {
       const postinstall = project.configuration.get("postinstall");
       if (postinstall) {
         console.log("Running postinstall script...");
-        Shell.execute(postinstall);
+        return await Shell.execute(postinstall);
       }
     }
   }
