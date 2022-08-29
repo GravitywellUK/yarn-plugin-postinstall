@@ -1,33 +1,33 @@
-import { CommandContext, Plugin, Configuration } from "@yarnpkg/core";
-import { Command } from "clipanion";
-import { configuration } from "./config";
-import { executePostInstallCommand } from "./postinstall";
+import { Plugin, Configuration, Project, Hooks } from "@yarnpkg/core";
+import { BaseCommand } from "@yarnpkg/cli";
+import { Command, Usage } from "clipanion";
+import { configuration } from "./configurations";
+import { executePostInstallCommand } from "./commands/postinstall";
 
+class PostInstallCommand extends BaseCommand {
+  static paths = [["postinstall"]];
 
+  static usage: Usage = Command.Usage({
+    description: 'Manually trigger the "postinstall" command',
+  });
 
-class PostInstallCommand extends Command<CommandContext> {
-  @Command.Path("postinstall")
   async execute() {
     const configuration = await Configuration.find(
       this.context.cwd,
       this.context.plugins
     );
-    const postinstall = configuration.get("postinstall");
-    
-    await executePostInstallCommand(postinstall);
+    const { project } = await Project.find(configuration, this.context.cwd);
+
+    await executePostInstallCommand(project);
   }
 }
 
-const plugin: Plugin = {
+const plugin: Plugin<Hooks> = {
   configuration,
-  commands: [ PostInstallCommand ],
+  commands: [PostInstallCommand],
   hooks: {
-    afterAllInstalled: async project => {
-      const postinstall = project.configuration.get("postinstall");
-
-      await executePostInstallCommand(postinstall);
-    }
-  }
+    afterAllInstalled: executePostInstallCommand,
+  },
 };
 
 export default plugin;
