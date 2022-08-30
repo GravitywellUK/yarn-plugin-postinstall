@@ -13,11 +13,18 @@ export const executePostInstallCommand = async (
     return;
   }
 
-  // Respect the mode `skip-build`.
-  // https://github.com/renovatebot/renovate/discussions/17442#discussioncomment-3499080
-  if (options?.mode === InstallMode.SkipBuild) {
-    console.log(`Skipping postinstall because of "--mode=skip-build"`);
-    return;
+  switch (options?.mode) {
+    // Avoid running postinstall scripts when Yarn `--mode` is used.
+    // This is important to allow tools like Renovate to correctly update the dependencies.
+    // See related discussion: https://github.com/renovatebot/renovate/discussions/17442
+    case InstallMode.SkipBuild:
+    case InstallMode.UpdateLockfile: {
+      console.log(`Skipping postinstall because of "--mode=${options?.mode}"`);
+      return;
+    }
+    default:
+      // ...continue
+      break;
   }
 
   const command = project.configuration.get("postinstall");
