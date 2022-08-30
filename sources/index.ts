@@ -1,4 +1,12 @@
-import { Plugin, Configuration, Project, Hooks } from "@yarnpkg/core";
+import {
+  Plugin,
+  Configuration,
+  Project,
+  Hooks,
+  StreamReport,
+  MessageName,
+  Cache,
+} from "@yarnpkg/core";
 import { BaseCommand } from "@yarnpkg/cli";
 import { Command, Usage } from "clipanion";
 import { configuration } from "./configurations";
@@ -17,8 +25,16 @@ class PostInstallCommand extends BaseCommand {
       this.context.plugins
     );
     const { project } = await Project.find(configuration, this.context.cwd);
-
-    await executePostInstallCommand(project);
+    const report = await StreamReport.start(
+      { configuration, stdout: this.context.stdout },
+      async (report) => {
+        await executePostInstallCommand(project, {
+          cache: null,
+          report,
+        });
+      }
+    );
+    return report.exitCode();
   }
 }
 
